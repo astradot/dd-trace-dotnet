@@ -10,6 +10,7 @@ using Datadog.Trace.Configuration;
 using Datadog.Trace.DiagnosticListeners;
 using Datadog.Trace.Sampling;
 using Datadog.Trace.TestHelpers;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Moq;
@@ -117,22 +118,27 @@ namespace Datadog.Trace.IntegrationTests.DiagnosticListeners
             var trace = Assert.Single(writer.Traces);
             var span = Assert.Single(trace);
 
-            Assert.Equal("aspnet_core.request", span.OperationName);
-            Assert.Equal("aspnet_core", span.GetTag(Tags.InstrumentationName));
-            Assert.Equal(SpanTypes.Web, span.Type);
-            Assert.Equal(resourceName, span.ResourceName);
-            Assert.Equal(SpanKinds.Server, span.GetTag(Tags.SpanKind));
-            Assert.Equal(TracerConstants.Language, span.GetTag(Tags.Language));
-            Assert.Equal(((int)statusCode).ToString(), span.GetTag(Tags.HttpStatusCode));
-            Assert.Equal(isError, span.Error);
+            span.OperationName.Should().Be("aspnet_core.request");
+            AssertTagHasValue(span, Tags.InstrumentationName, "aspnet_core");
+            span.Type.Should().Be(SpanTypes.Web);
+            span.ResourceName.Should().Be(resourceName);
+            AssertTagHasValue(span, Tags.SpanKind, SpanKinds.Server);
+            AssertTagHasValue(span, Tags.Language, TracerConstants.Language);
+            AssertTagHasValue(span, Tags.HttpStatusCode, ((int)statusCode).ToString());
+            span.Error.Should().Be(isError);
 
             if (expectedTags is not null)
             {
                 foreach (var expectedTag in expectedTags.Values)
                 {
-                    Assert.Equal(expectedTag.Value, span.Tags.GetTag(expectedTag.Key));
+                    AssertTagHasValue(span, expectedTag.Key, expectedTag.Value);
                 }
             }
+        }
+
+        private static void AssertTagHasValue(Span span, string tagName, string expected)
+        {
+            span.GetTag(tagName).Should().Be(expected, $"'{tagName}' should have correct value");
         }
 
         private static Tracer GetTracer(IAgentWriter writer = null, IConfigurationSource configSource = null)
