@@ -1,6 +1,7 @@
 #if !NETFRAMEWORK
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,10 +27,24 @@ namespace Datadog.Trace.IntegrationTests.DiagnosticListeners
         }
 
         [Theory]
+        [MemberData(nameof(AspNetCoreMvcTestData.WithFeatureFlag), MemberType = typeof(AspNetCoreMvcTestData))]
+        public async Task DiagnosticObserver_ForMvcEndpoints_WithFeatureFlag_SubmitsSpans(string path, HttpStatusCode statusCode, bool isError, string resourceName, SerializableDictionary expectedTags)
+        {
+            await AssertDiagnosticObserverSubmitsSpans<MvcStartup>(path, statusCode, isError, resourceName, expectedTags, featureFlag: true);
+        }
+
+        [Theory]
         [MemberData(nameof(AspNetCoreRazorPagesTestData.WithoutFeatureFlag), MemberType = typeof(AspNetCoreRazorPagesTestData))]
         public async Task DiagnosticObserver_ForRazorPages_SubmitsSpans(string path, HttpStatusCode statusCode, bool isError, string resourceName, SerializableDictionary expectedTags)
         {
             await AssertDiagnosticObserverSubmitsSpans<Samples.AspNetCoreRazorPages.Startup>(path, statusCode, isError, resourceName, expectedTags);
+        }
+
+        [Theory]
+        [MemberData(nameof(AspNetCoreRazorPagesTestData.WithFeatureFlag), MemberType = typeof(AspNetCoreRazorPagesTestData))]
+        public async Task DiagnosticObserver_ForRazorPages_WithFeatureFlag_SubmitsSpans(string path, HttpStatusCode statusCode, bool isError, string resourceName, SerializableDictionary expectedTags)
+        {
+            await AssertDiagnosticObserverSubmitsSpans<Samples.AspNetCoreRazorPages.Startup>(path, statusCode, isError, resourceName, expectedTags, featureFlag: true);
         }
 
 #if !NETCOREAPP2_1
@@ -39,6 +54,13 @@ namespace Datadog.Trace.IntegrationTests.DiagnosticListeners
         {
             await AssertDiagnosticObserverSubmitsSpans<EndpointRoutingStartup>(path, statusCode, isError, resourceName, expectedTags);
         }
+
+        [Theory]
+        [MemberData(nameof(AspNetCoreEndpointRoutingTestData.WithFeatureFlag), MemberType = typeof(AspNetCoreEndpointRoutingTestData))]
+        public async Task DiagnosticObserver_ForEndpointRouting_WithFeatureFlag_SubmitsSpans(string path, HttpStatusCode statusCode, bool isError, string resourceName, SerializableDictionary expectedTags)
+        {
+            await AssertDiagnosticObserverSubmitsSpans<EndpointRoutingStartup>(path, statusCode, isError, resourceName, expectedTags, featureFlag: true);
+        }
 #endif
 
         private static async Task AssertDiagnosticObserverSubmitsSpans<T>(
@@ -46,11 +68,16 @@ namespace Datadog.Trace.IntegrationTests.DiagnosticListeners
             HttpStatusCode statusCode,
             bool isError,
             string resourceName,
-            SerializableDictionary expectedTags)
+            SerializableDictionary expectedTags,
+            bool featureFlag = false)
             where T : class
         {
             var writer = new AgentWriterStub();
-            var tracer = GetTracer(writer);
+            var configSource = new NameValueConfigurationSource(new NameValueCollection
+            {
+                { ConfigurationKeys.FeatureFlags.AspNetCoreRouteTemplateResourceNamesEnabled, featureFlag.ToString() },
+            });
+            var tracer = GetTracer(writer, configSource);
 
             var builder = new WebHostBuilder()
                .UseStartup<T>();
@@ -108,9 +135,9 @@ namespace Datadog.Trace.IntegrationTests.DiagnosticListeners
             }
         }
 
-        private static Tracer GetTracer(IAgentWriter writer = null)
+        private static Tracer GetTracer(IAgentWriter writer = null, IConfigurationSource configSource = null)
         {
-            var settings = new TracerSettings();
+            var settings = new TracerSettings(configSource);
             var agentWriter = writer ?? new Mock<IAgentWriter>().Object;
             var samplerMock = new Mock<ISampler>();
 
