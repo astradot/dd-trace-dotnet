@@ -180,6 +180,9 @@ namespace Datadog.Trace.Configuration
 
             TraceBatchInterval = source?.GetInt32(ConfigurationKeys.SerializationBatchInterval)
                         ?? 100;
+
+            AspNetCoreRouteTemplateResourceNamesEnabled = source?.GetBool(ConfigurationKeys.FeatureFlags.AspNetCoreRouteTemplateResourceNamesEnabled)
+                                                       ?? false;
         }
 
         /// <summary>
@@ -383,6 +386,12 @@ namespace Datadog.Trace.Configuration
         internal int TraceBatchInterval { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether the feature flag to enable the updated ASP.NET resource names is enabled
+        /// </summary>
+        /// <seealso cref="ConfigurationKeys.FeatureFlags.AspNetCoreRouteTemplateResourceNamesEnabled"/>
+        internal bool AspNetCoreRouteTemplateResourceNamesEnabled { get; }
+
+        /// <summary>
         /// Create a <see cref="TracerSettings"/> populated from the default sources
         /// returned by <see cref="CreateDefaultConfigurationSource"/>.
         /// </summary>
@@ -488,7 +497,7 @@ namespace Datadog.Trace.Configuration
 
         internal bool IsNetStandardFeatureFlagEnabled()
         {
-            var value = EnvironmentHelpers.GetEnvironmentVariable("DD_TRACE_NETSTANDARD_ENABLED", string.Empty);
+            var value = EnvironmentHelpers.GetEnvironmentVariable(ConfigurationKeys.FeatureFlags.NetStandardEnabled, string.Empty);
 
             return value == "1" || value == "true";
         }
