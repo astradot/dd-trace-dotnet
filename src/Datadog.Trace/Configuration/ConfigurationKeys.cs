@@ -342,10 +342,12 @@ namespace Datadog.Trace.Configuration
         internal static class FeatureFlags
         {
             /// <summary>
-            /// Feature Flag for whether to enable the updated ASP.NET resource names
+            /// Feature Flag: enables updated resource names on `aspnet.request`, `aspnet-mvc.request`,
+            /// `aspnet-webapi.request`, and `aspnet_core.request` spans. Enables `aspnet_core.mvc` spans and
+            /// additional features on `aspnet_core.request` spans.
             /// </summary>
-            /// <seealso cref="TracerSettings.AspNetCoreRouteTemplateResourceNamesEnabled"/>
-            public const string AspNetCoreRouteTemplateResourceNamesEnabled = "DD_TRACE_ASPNETCORE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED";
+            /// <seealso cref="TracerSettings.RouteTemplateResourceNamesEnabled"/>
+            public const string RouteTemplateResourceNamesEnabled = "DD_TRACE_ROUTE_TEMPLATE_RESOURCE_NAMES_ENABLED ";
 
             /// <summary>
             /// Feature Flag for whether .NET Standard mode is enabled
