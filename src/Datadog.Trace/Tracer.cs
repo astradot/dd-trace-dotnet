@@ -537,6 +537,12 @@ namespace Datadog.Trace
                     writer.WritePropertyName("netstandard_enabled");
                     writer.WriteValue(Settings.IsNetStandardFeatureFlagEnabled());
 
+                    writer.WritePropertyName("partialflush_enabled");
+                    writer.WriteValue(Settings.PartialFlushEnabled);
+
+                    writer.WritePropertyName("partialflush_minspans");
+                    writer.WriteValue(Settings.PartialFlushMinSpans);
+
                     writer.WritePropertyName("agent_reachable");
                     writer.WriteValue(agentError == null);
 
