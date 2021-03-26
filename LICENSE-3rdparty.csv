@@ -15,3 +15,4 @@ opentelemetry-dotnet-instrumentation,https://github.com/open-telemetry/opentelem
 Newtonsoft.Json,https://github.com/JamesNK/Newtonsoft.Json,MIT,Copyright (c) 2007 James Newton-King
 spdlog,https://github.com/gabime/spdlog,MIT,"Copyright (c) 2016 Gabi Melman."
 {fmt},https://github.com/fmtlib/fmt,MIT,"Copyright (c) 2012 - present, Victor Zverovich"
+JetBrains.Profiler.Api,https://github.com/JetBrains/profiler-api,Apache-2.0,"Copyright © 2019-2020 JetBrains s.r.o."
