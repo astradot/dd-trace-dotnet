@@ -89,7 +89,7 @@
     <!-- Integration: Elasticsearch.Net -->
     <!-- Assembly: Elasticsearch.Net -->
     <!-- Latest package https://www.nuget.org/packages/Elasticsearch.Net/7.15.1 -->
-    <PackageReference Include="Elasticsearch.Net" Version="7.15.1" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.15.2" />
 
     <!-- Integration: GraphQL -->
     <!-- Assembly: GraphQL -->
