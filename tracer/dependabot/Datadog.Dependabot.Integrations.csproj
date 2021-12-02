@@ -14,7 +14,7 @@
     <!-- Integration: Microsoft.Data.Sqlite -->
     <!-- Assembly: Microsoft.Data.Sqlite -->
     <!-- Latest package https://www.nuget.org/packages/Microsoft.Data.Sqlite/5.0.11 -->
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.11" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0" />
 
     <!-- Integration: MySql.Data -->
     <!-- Assembly: MySql.Data -->
