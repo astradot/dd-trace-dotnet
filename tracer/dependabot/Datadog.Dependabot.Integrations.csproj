@@ -126,7 +126,7 @@
     <!-- Integration: Microsoft.AspNetCore.Html.Abstractions -->
     <!--    Assembly: Microsoft.AspNetCore.Html.Abstractions -->
     <!-- Latest package https://www.nuget.org/packages/Microsoft.AspNetCore.Html.Abstractions/2.2.0 -->
-    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
 
     <!-- Integration: Microsoft.AspNetCore.Identity -->
     <!--    Assembly: Microsoft.AspNetCore.Identity -->
