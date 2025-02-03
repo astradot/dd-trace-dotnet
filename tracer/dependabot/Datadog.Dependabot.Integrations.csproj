@@ -238,7 +238,7 @@
     <!-- Integration: NLog -->
     <!--    Assembly: NLog -->
     <!-- Latest package https://www.nuget.org/packages/NLog/5.3.4 -->
-    <PackageReference Include="NLog" Version="5.3.4" />
+    <PackageReference Include="NLog" Version="5.4.0" />
 
     <!-- Integration: Npgsql -->
     <!--    Assembly: Npgsql -->
